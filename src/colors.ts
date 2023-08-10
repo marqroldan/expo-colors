@@ -1,50 +1,66 @@
 export const colorCategories = [
     {
-        redPink: [5.14,357.54]
+        name: 'redPink',
+        values: [0]
     },
     {
-        red: [27.92]
+        name: 'red',
+        values: [20.92]
     },
     {
-        orangeRed: [36.84]
+        name: 'orangeRed',
+        values: [36.84]
     },
     {
-        orange: [36.84]
+        name: 'orange',
+        values: [56.46]
     },
     {
-        yellowOrange: [80.53]
+        name: 'yellowOrange',
+        values: [80.53]
     },
     {
-        yellow: [106.68]
+        name: 'yellow',
+        values: [106.68]
     },
     {
-        greenYellow: [126.29]
+        name: 'greenYellow',
+        values: [126.29]
     },
     {
-        green: [142.45]
+        name: 'green',
+        values: [142.45]
     },
     {
-        cyanGreen: [165.211]
+        name: 'cyanGreen',
+        values: [165.211]
     },
     {
-        cyan: [187.23]
+        name: 'cyan',
+        values: [187.23]
     },
     {
-        blueCyan: [222.36]
+        name: 'blueCyan',
+        values: [222.36]
     },
     {
-        blue: [258.11]
+        name: 'blue',
+        values: [258.11]
     },
     {
-        violetBlue: [276.7]
+        name: 'violetBlue',
+        values: [276.7]
     },
     {
-        violet: [290.98]
+        name: 'violet',
+        values: [290.98]
     },
     {
-        pinkViolet: [318.42]
+        name: 'pinkViolet',
+        values: [318.42]
     },
     {
-        pink: [341.67]
+        name: 'pink',
+        values: [341.67]
     },
 ]
