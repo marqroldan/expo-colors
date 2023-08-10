@@ -5,6 +5,8 @@ import ColorPicker, { Panel1, Swatches, Preview, OpacitySlider, HueSlider } from
 import { ColorBlockInput } from './src/components/ColorBlockInput';
 import { ColorDetailsBlock } from './src/components/ColorDetailsBlock';
 
+import {default as App2} from './App2';
+
 export default function App() {
   const [showModal, setShowModal] = useState(false);
   const [currentInterimValue, setCurrentInterimValue] = useState();
@@ -29,7 +31,7 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-        <View style={{flexDirection: 'row', gap: 20, padding: 20,borderBottomWidth: 1}}>
+        <View style={{ gap: 20, padding: 20,borderBottomWidth: 1}}>
         <ColorBlockInput index={0} onChange={setColorValue(0)} value={currentSwatch[0]} />
         <ColorBlockInput index={1} onChange={setColorValue(1)} value={currentSwatch[1]} />
         <ColorBlockInput index={2} onChange={setColorValue(2)} value={currentSwatch[2]} />
@@ -38,6 +40,7 @@ export default function App() {
           <ColorDetailsBlock swatches={currentSwatch}/>
 
         </View>
+        <App2/>
     </View>
   );
 }
@@ -45,5 +48,6 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    flexDirection: 'row',
   },
 });
