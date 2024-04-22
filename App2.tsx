@@ -1,3 +1,4 @@
+import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import {useState} from 'react';
 import { Pressable, StyleSheet, Switch, Text, View } from 'react-native';
@@ -12,6 +13,8 @@ const finalColorCategories = [
   },
   ..._colorCategories,
 ]
+
+const TagsList = ['Charity', 'Paracetamol','FREE', 'VIP', 'Admitted', "More...", "+6"]
 
 const shadeGeneratorBy3 = (start = 0, followingSteps = 1, increaseFactor = 0.374899, decayFactor = 0.3931) => {
   const shades = [[start, '0.241']];
@@ -37,11 +40,38 @@ const surfaceShadeGenerator = () => {
  })
 }
 
+const shadeSegments = [
+  shadeGeneratorBy3(24.78, 4,  0.374899, 0.3031),
+  shadeGeneratorBy3(65.34, 4, 0.06, 0.0),
+  surfaceShadeGenerator(),
+]
+
+const shadesTextColor = [
+    shadeSegments[0][1],
+    shadeSegments[2][(shadeSegments[2]?.length ?? 1) - 1]
+]
+
+const specialShadesList = [
+  shadeSegments[0][1],
+  shadeSegments[0][3],
+
+    ////
+  shadeSegments[1][0],
+  shadeSegments[1][2],
+  shadeSegments[1][4],
+    ////
+  shadeSegments[2][0],
+  shadeSegments[2][4],
+    ////
+]
+
+
 const shadesList = [
   [0, '0.086'],
-  ...shadeGeneratorBy3(24.78, 4,  0.374899, 0.3031),
-  ...shadeGeneratorBy3(65.34, 4, 0.06, 0.0),
-    ...surfaceShadeGenerator(),
+    ...shadeSegments.reduce((acc, arr) => {
+      acc.push(...arr);
+      return acc;
+    }, [])
 ] || [
   ['27.33', '0.086'],
   ['32.92', '0.111'],
@@ -159,8 +189,10 @@ export default function App() {
   const completedBoundaries = completeTheHueBoundaries(_colorCategories);
 
   const colorSteps = {};
+  const colorSteps2 = {};
 
   return (
+      <React.Fragment>
     <View style={darkMode ? styles.dark : styles.container}>
       <View style={{position: 'absolute', top: 0, left: 0, height: 50}}>
 
@@ -179,7 +211,7 @@ export default function App() {
               {
                 shadesList.map((shadesListItem) => {
                   const lightness = (parseFloat(shadesListItem[0]) / 100) * (darkMode ? 0.8 : 1);
-                  const chroma = item.name === 'greyscale' ? 0 : parseFloat(shadesListItem[1]) + 0.03;
+                  const chroma = item.name === 'greyscale' ? 0 : parseFloat(shadesListItem[1]) ;
 
                   const hue = colorItem?.boundaries?.[0]?.[1] ?? 0;
                   const _color = new Color(`oklch(${lightness} ${chroma} ${hue})`);
@@ -465,6 +497,56 @@ export default function App() {
         })
       }
     </View>
+
+        <View style={{borderWidth: 1, padding: 100, flexDirection: 'row', gap: 10}}>
+          {
+            finalColorCategories.map((item) => {
+              const colorItem = completedBoundaries[item.name];
+              colorSteps2[item.name] = [];
+
+
+              return <View style={{gap: 10}}>{specialShadesList.map((shadesListItem) => {
+                const lightness = (parseFloat(shadesListItem[0]) / 100) * (darkMode ? 0.8 : 1);
+                const chroma = item.name === 'greyscale' ? 0 : parseFloat(shadesListItem[1]) ;
+
+                const hue = colorItem?.boundaries?.[0]?.[1] ?? 0;
+                const _color = new Color(`oklch(${lightness} ${chroma} ${hue})`);
+                const rgbaColor = _color.to('srgb').toString({format: 'hex'});
+
+
+                const textColor = new Color(`oklch(${lightness < 0.80 ? parseFloat(shadesTextColor[1]) / 100 : parseFloat(shadesTextColor[0]) / 100} ${chroma} ${hue})`);
+                const textColorHex = textColor.to('srgb').toString({format: 'hex'})
+
+                colorSteps2[item.name].push(rgbaColor)
+
+                const randomNumber1 = Math.floor(Math.random() * TagsList.length);
+
+                return (
+                    <View style={{paddingHorizontal: 8, height: 26,
+                      alignSelf: 'center',
+                      justifyContent: 'center',
+                      alignItems: 'center', borderRadius: 4,
+                      'backgroundColor': `oklch(63.49% 0.144 ${hue})`,
+                      backgroundColor: 'rgba(1155,25,0,1)',
+                      backgroundColor: 'oklch(40.1% 0.123 21.57)',
+                      backgroundColor: rgbaColor,
+                    }} dataSet={{lightness}}>
+                      <Text style={{ fontFamily: 'Roboto', fontSize: 12, lineHeight: 12, textAlign: 'center', fontWeight: 'bold', color: textColorHex}}>{
+                        //JSON.stringify({lightness: lightness.toFixed(2)})
+
+                        TagsList[randomNumber1].toUpperCase()
+                      }</Text>
+
+                    </View>)
+
+              })}</View>
+            })
+          }
+
+
+
+        </View>
+      </React.Fragment>
   );
 }
 
