@@ -37,7 +37,7 @@ export const colorCategories = [
     },
     {
         name: 'cyan',
-        values: [186.46]
+        values: [187.23]
     },
     {
         name: 'blueCyan',
@@ -49,7 +49,7 @@ export const colorCategories = [
     },
     {
         name: 'violetBlue',
-        values: [277.7]
+        values: [276.7]
     },
     {
         name: 'violet',

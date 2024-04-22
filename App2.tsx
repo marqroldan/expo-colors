@@ -13,7 +13,36 @@ const finalColorCategories = [
   ..._colorCategories,
 ]
 
+const shadeGeneratorBy3 = (start = 0, followingSteps = 1, increaseFactor = 0.374899, decayFactor = 0.3931) => {
+  const shades = [[start, '0.241']];
+
+  for (let i = 1; i<followingSteps+1; i++) {
+    const shade = shades[i-1].slice();
+
+    shade[0] = shade[0] + (shade[0] * (increaseFactor - (increaseFactor * (i -1 ) * decayFactor)))
+
+    shades.push(shade)
+  }
+
+return shades;
+}
+
+
+/// L-value from HSL
+const surfaces = [0.5,1,2,3,5,7,8,10,11.5,13]
+const surfacesLCH = [90.06, 91.28, 92.49, 94.01,94.61,96.12,97.61,98.51, 99.11, 99.7]
+const surfaceShadeGenerator = () => {
+ return surfacesLCH.map((a) => {
+   return [a, '0.111']
+ })
+}
+
 const shadesList = [
+  [0, '0.086'],
+  ...shadeGeneratorBy3(24.78, 4,  0.374899, 0.3031),
+  ...shadeGeneratorBy3(65.34, 4, 0.06, 0.0),
+    ...surfaceShadeGenerator(),
+] || [
   ['27.33', '0.086'],
   ['32.92', '0.111'],
   ['44.22', '0.132'],
@@ -71,7 +100,7 @@ const completeTheHueBoundaries = (colorCategories) => {
       const category = sortedCategories[i];
       const name = category.name;
       const value = category.values[0];
- 
+
       const prevIndex = i === 0 ? colorCategories.length - 1 : i - 1;
       const prevCategory = sortedCategories[prevIndex];
       const prevValue = prevCategory.values[0];
@@ -154,7 +183,7 @@ export default function App() {
 
                   const hue = colorItem?.boundaries?.[0]?.[1] ?? 0;
                   const _color = new Color(`oklch(${lightness} ${chroma} ${hue})`);
-        
+
                   const rgbaColor = _color.to('srgb').toString({format: 'hex'});
 
                   colorSteps[item.name].push(rgbaColor)
@@ -169,11 +198,15 @@ export default function App() {
                       backgroundColor: 'rgba(1155,25,0,1)',
                       backgroundColor: 'oklch(40.1% 0.123 21.57)',
                       backgroundColor: rgbaColor,
-                    }}>
-                      <Text style={{marginHorizontal: -500, textAlign: 'center', color: lightness < 0.5 ? 'white' : 'black'}}>{}</Text>
-        
+                    }} dataSet={{lightness}}>
+                      <Text style={{marginHorizontal: -500, textAlign: 'center', color: lightness < 0.70 ? 'white' : 'black'}}>{
+                        //JSON.stringify({lightness: lightness.toFixed(2)})
+
+
+                      }</Text>
+
                       </View>)
-      
+
                 })
               }
               <View style={{height: 50}}/>
