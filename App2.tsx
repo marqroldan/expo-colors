@@ -172,8 +172,8 @@ const completeTheHueBoundaries = (colorCategories) => {
     return finalColors
 }
 
-export default function App() {
-  const [darkMode, setDarkMode] = useState(false);
+export default function App(props) {
+  const darkMode = props.darkMode;
 
   let [fontsLoaded] = useFonts({
     DMSans_400Regular,
@@ -191,27 +191,31 @@ export default function App() {
   const colorSteps = {};
   const colorSteps2 = {};
 
+  let finalShadesList = props.shadesList ?? shadesList;
+  if(typeof finalShadesList) {
+    finalShadesList = JSON.parse(finalShadesList);
+  }
+
+  if(!finalShadesList.length) {
+    finalShadesList = shadesList
+  }
+
+
   return (
       <React.Fragment>
     <View style={darkMode ? styles.dark : styles.container}>
-      <View style={{position: 'absolute', top: 0, left: 0, height: 50}}>
-
-        <Switch value={darkMode} onValueChange={() => {
-          setDarkMode((val) => !val)
-        }}/>
-      </View>
       {
         finalColorCategories.map((item) => {
           const colorItem = completedBoundaries[item.name];
           colorSteps[item.name] = [];
 
-          const defaultIndex = Math.floor(( shadesList.length / 2)  + (shadesList.length * 0.25));
+          const defaultIndex = Math.floor(( finalShadesList.length / 2)  + (finalShadesList.length * 0.25));
           return (
             <View>
               {
-                shadesList.map((shadesListItem) => {
+                finalShadesList.map((shadesListItem) => {
                   const lightness = (parseFloat(shadesListItem[0]) / 100) * (darkMode ? 0.8 : 1);
-                  const chroma = item.name === 'greyscale' ? 0 : parseFloat(shadesListItem[1]) ;
+                  const chroma = item.name === 'greyscale' ? 0 : parseFloat((props.chroma || 0) ?? shadesListItem[1] ?? 0);
 
                   const hue = colorItem?.boundaries?.[0]?.[1] ?? 0;
                   const _color = new Color(`oklch(${lightness} ${chroma} ${hue})`);
